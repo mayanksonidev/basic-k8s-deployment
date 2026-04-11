@@ -34,6 +34,48 @@ app.get('/secrets', (req, res) => {
   `);
 });
 
+
+// Probes
+const startTime = Date.now();
+
+app.get('/healthz', (req, res) => {
+  const elapsed = (Date.now() - startTime) / 1000;
+
+  // Startup Probe: Fail for the first 30 seconds
+  if (elapsed < 30) {
+    console.log(`[Startup] Failed. Elapsed: ${elapsed.toFixed(1)}s`);
+    return res.status(500).send('Startup Check Failed');
+  }
+
+  // Liveness Probe: Fail between 35s and 50s (simulate a temporary gltich)
+  if (elapsed > 35 && elapsed < 50) {
+    console.log(`[Liveness] Failed. Elapsed: ${elapsed.toFixed(1)}s`);
+    return res.status(500).send('Liveness Check Failed');
+  }
+
+  // Otherwise healthy
+  res.status(200).send('OK');
+});
+
+app.get('/readyz', async (req, res) => {
+  const elapsed = (Date.now() - startTime) / 1000;
+
+  // Readiness Probe: Fail for the first 60 seconds (simulate loading data)
+  if (elapsed < 60) {
+    console.log(`[Readiness] Failed. Elapsed: ${elapsed.toFixed(1)}s`);
+    return res.status(500).send('Readiness Check Failed');
+  }
+
+  try {
+    // Check DB connection
+    await pool.promise().query('SELECT 1');
+    res.status(200).send('OK');
+  } catch (err) {
+    console.error('Readiness check failed:', err);
+    res.status(500).send('Not Ready');
+  }
+});
+
 /**
  * POST /users
  * Body: { "name": "...", "email": "..." }
@@ -122,7 +164,7 @@ app.get('/users', async (req, res) => {
 });
 
 async function initializeDatabase() {
-  
+
   const createUsersTableSQL = `
     CREATE TABLE IF NOT EXISTS users (
       id    INT AUTO_INCREMENT PRIMARY KEY,
@@ -143,7 +185,7 @@ async function initializeDatabase() {
 
 async function init() {
   try {
-  
+
     const connection = await pool.promise().getConnection();
     connection.release();
     console.log('✅ Connected to MySQL');
