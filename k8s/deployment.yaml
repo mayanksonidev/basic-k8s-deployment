@@ -24,4 +24,13 @@ spec:
         - secretRef:
             name: node-app-secret
         env:
-        
+        - name: DB_HOST
+          value: "mysql-service"
+        - name: DB_PORT
+          value: "3306"
+        - name: DB_USER
+          value: "appuser"
+        - name: DB_PASSWORD
+          value: "apppassword"
+        - name: DB_NAME
+          value: "appdb"
