@@ -8,8 +8,6 @@
     },
     "dependencies": {
       "express": "^4.17.1",
-      "dotenv":"^16.4.7",
-      "mysql2":"^3.14.1"
-
+      "dotenv":"^16.4.7"
     }
   }
