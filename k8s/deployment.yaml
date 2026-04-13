@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: node-app
-        image: node-app:latest
+        image: node-app:2.0
         imagePullPolicy: Never
         ports:
         - containerPort: 3000
@@ -30,7 +30,5 @@ spec:
           value: "3306"
         - name: DB_USER
           value: "appuser"
-        - name: DB_PASSWORD
-          value: "apppassword"
         - name: DB_NAME
           value: "appdb"
