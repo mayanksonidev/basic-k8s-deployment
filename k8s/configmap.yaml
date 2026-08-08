@@ -5,3 +5,7 @@ metadata:
 data:
   MESSAGE1: "Make rangoli on fun fridays!"
   MESSAGE2: "90 hours work week!"
+  DB_HOST: "mysql-service"
+  DB_PORT: "3306"
+  DB_USER: "appuser"
+  DB_NAME: "appdb"
