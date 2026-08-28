@@ -81,6 +81,22 @@ To deploy the Node.js app to a Kubernetes cluster, follow these steps:
 
 Your Node.js app should now be accessible through the IP provided by the ClusterIP service.
 
+## Automated Clean Build, Deploy, and Test
+
+An automated script [`test.sh`](file:///Users/mayanksoni/personal/github/basic-k8s-deployment/test.sh) is provided to perform cleanups, Docker builds, Kubernetes deployments, and access testing in a single step:
+
+```sh
+./test.sh
+```
+
+This script will:
+1. Clean up existing deployments/services (`kubectl delete`).
+2. Build the Docker image (`node-app:2.0`).
+3. Deploy MySQL database and Node.js application resources.
+4. Wait for both deployments to become rollout ready (`kubectl rollout status`).
+5. Establish port forwarding and test HTTP endpoints using `curl`.
+
 
 > You can follow the same steps to build and deploy the python flask app. Only you need to change the image referenced in your deployment.yaml file.
+
 
