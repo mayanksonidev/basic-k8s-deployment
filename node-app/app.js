@@ -19,6 +19,29 @@ app.get('/', (req, res) => {
   res.send(`<h1>Hello Developers!</h1>`);
 });
 
+/**
+ * Liveness & Startup Probe
+ * GET /healthz
+ * Indicates whether the Node.js process is alive and responsive.
+ */
+app.get('/healthz', (req, res) => {
+  res.status(200).json({ status: 'OK', uptime: process.uptime() });
+});
+
+/**
+ * Readiness Probe
+ * GET /ready
+ * Checks MySQL database connectivity.
+ */
+app.get('/ready', async (req, res) => {
+  try {
+    await pool.promise().query('SELECT 1');
+    res.status(200).json({ status: 'UP', database: 'connected' });
+  } catch (err) {
+    res.status(503).json({ status: 'DOWN', database: 'disconnected', error: err.message });
+  }
+});
+
 app.get('/message1', (req, res) => {
   res.send(`<h1>Hello Developers! ${message1}</h1>`);
 });
